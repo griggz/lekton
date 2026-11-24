@@ -1,6 +1,6 @@
 [project]
 name = "lekton"
-version = "0.0.1"
+version = "0.0.2"
 description = "Claim kinds built from one primitive: a thought, and what you add to it."
 readme = "README.md"
 requires-python = ">=3.10"

@@ -2,7 +2,7 @@
 
 > lekton is a Python library for defining kinds of claims from one primitive, the thought. A claim is something a person decided, noticed, argued, or believed. Every kind is a thought plus something: fields it adds, other claims it is made of, or an edge it owes. A claim's kind is decided by its structure, not by its label.
 
-Install with `pip install lekton` once it is published; until then, install from the repository. Import everything from the top level: `from lekton import Thought, Question, Decision, check, promote, load_kinds`.
+Install with `pip install lekton`. It needs Python 3.10 or later. Import everything from the top level: `from lekton import Thought, Question, Decision, check, promote, load_kinds`.
 
 ## Docs
 
