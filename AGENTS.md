@@ -61,3 +61,12 @@ Hold to this when you add anything. Do not add a strict mode, a quality score, o
 
 - Conventional commit messages: `feat:`, `fix:`, `docs:`, `chore:`.
 - Work on a branch and open a pull request into `main`.
+
+## Releases
+
+A published GitHub release is the only way into PyPI. `.github/workflows/publish.yml` builds and uploads it with trusted publishing, so no token is stored in the repository.
+
+1. Set `version` in `pyproject.toml` and run `uv sync` so `uv.lock` matches. Merge that to `main`.
+2. Publish a GitHub release tagged `v<version>` on `main`. The workflow refuses a tag that does not match the package version.
+
+A version on PyPI can never be replaced. The README is the PyPI page, so its links and images use full URLs.

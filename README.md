@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-    <img src="assets/logo-light.svg" alt="lekton: what can be said" width="400">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/griggz/lekton/main/assets/logo-dark.svg">
+    <img src="https://raw.githubusercontent.com/griggz/lekton/main/assets/logo-light.svg" alt="lekton: what can be said" width="400">
   </picture>
 </p>
 
@@ -21,7 +21,11 @@ The name is Stoic. A *lekton* is "what can be said": the content of an utterance
 
 The mark is a lambda, the first letter of λεκτόν, drawn as two strokes: a thought, and what you add to it.
 
-Status: v0. Not on PyPI yet.
+Status: v0. The shape of the shipped kinds may still change.
+
+```bash
+pip install lekton
+```
 
 ## Background
 
@@ -208,12 +212,12 @@ lekton is meant to be picked up by an agent working for a person, as much as by 
 
 | If you are | Start here |
 |---|---|
-| An agent that needs the docs | [`llms.txt`](llms.txt), an index of every page as Markdown |
-| An agent recording claims for someone | [`skills/lekton/SKILL.md`](skills/lekton/SKILL.md) |
-| Wiring lekton into tool calls or structured output | [Using lekton from an agent](docs/agents.md) |
-| Working on this repository | [`AGENTS.md`](AGENTS.md) |
+| An agent that needs the docs | [`llms.txt`](https://github.com/griggz/lekton/blob/main/llms.txt), an index of every page as Markdown |
+| An agent recording claims for someone | [`skills/lekton/SKILL.md`](https://github.com/griggz/lekton/blob/main/skills/lekton/SKILL.md) |
+| Wiring lekton into tool calls or structured output | [Using lekton from an agent](https://github.com/griggz/lekton/blob/main/docs/agents.md) |
+| Working on this repository | [`AGENTS.md`](https://github.com/griggz/lekton/blob/main/AGENTS.md) |
 
-More in [`docs/`](docs/), and runnable scripts in [`examples/`](examples/).
+More in [`docs/`](https://github.com/griggz/lekton/tree/main/docs), and runnable scripts in [`examples/`](https://github.com/griggz/lekton/tree/main/examples).
 
 ## Development
 
@@ -227,4 +231,4 @@ uv run pytest
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](https://github.com/griggz/lekton/blob/main/LICENSE).

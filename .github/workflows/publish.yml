@@ -1,0 +1,49 @@
+name: Publish to PyPI
+
+# The only way into PyPI. Publishing a GitHub release starts this job.
+# It uses PyPI trusted publishing, so no token is stored in this repository:
+# PyPI trusts this workflow, in this repository, in the `pypi` environment.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  pypi-publish:
+    name: Upload lekton to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+
+      # A version on PyPI can never be replaced, so refuse a release whose
+      # tag and package version disagree.
+      - name: Check the tag matches the package version
+        run: |
+          version=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match the package version $version."
+            exit 1
+          fi
+
+      - name: Run tests
+        run: |
+          uv sync
+          uv run pytest
+
+      - name: Build
+        run: uv build
+
+      - name: Publish
+        run: uv publish -v dist/lekton-*.tar.gz dist/lekton-*.whl
