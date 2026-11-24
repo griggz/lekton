@@ -1,0 +1,27 @@
+# A small template. Each kind names the kind it specializes.
+# Load it with lekton.load_kinds; see kinds_from_yaml.py.
+
+risk:
+  specializes: thought
+  adds:
+    likelihood: low|medium|high
+    impact: text
+    seen_on: date?
+
+experiment:
+  specializes: thought
+  adds:
+    hypothesis: text
+    measure: text
+    ends_on: date
+  requires:
+    resolves: question
+
+bet:
+  specializes: thought
+  composed_of:
+    min: 2
+    parts: [decision, risk]
+  adds:
+    thesis: text
+    tags?: [text]
