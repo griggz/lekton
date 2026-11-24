@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 132" width="470" height="132" role="img" aria-label="lekton">
+  <title>lekton</title>
+  <!-- The mark is a lowercase lambda, the first letter of λεκτόν, drawn as
+       two strokes: the long one is the thought, the short one is what you
+       add to it. -->
+  <polygon points="26,14 43,14 100,104 83,104" fill="#0D0D0D"/>
+  <polygon points="48.6,49.7 57.7,64 38,104 21,104" fill="#E86A2B"/>
+  <text x="132" y="80" font-family="Georgia, 'Times New Roman', Times, serif" font-size="70" letter-spacing="1" fill="#0D0D0D">lekton</text>
+  <text x="135" y="111" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="14" letter-spacing="2.4" fill="#9C968A">λεκτόν · what can be said</text>
+</svg>

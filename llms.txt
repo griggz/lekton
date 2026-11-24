@@ -1,0 +1,25 @@
+# lekton
+
+> lekton is a Python library for defining kinds of claims from one primitive, the thought. A claim is something a person decided, noticed, argued, or believed. Every kind is a thought plus something: fields it adds, other claims it is made of, or an edge it owes. A claim's kind is decided by its structure, not by its label.
+
+Install with `pip install lekton` once it is published; until then, install from the repository. Import everything from the top level: `from lekton import Thought, Question, Decision, check, promote, load_kinds`.
+
+## Docs
+
+- [README](https://raw.githubusercontent.com/griggz/lekton/main/README.md): what the library is, the three relations, and a short tour
+- [Template format](https://raw.githubusercontent.com/griggz/lekton/main/docs/template-format.md): how to declare a kind as YAML, the field types, and the rules
+- [API reference](https://raw.githubusercontent.com/griggz/lekton/main/docs/reference.md): every public name with its arguments, result, and errors
+- [Using lekton from an agent](https://raw.githubusercontent.com/griggz/lekton/main/docs/agents.md): the schema, check, and feedback loop, and which fields a model should not fill
+
+## Examples
+
+- [thought_to_decision.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/thought_to_decision.py): record a thought, promote it to a decision, and resolve a question
+- [define_a_kind.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/define_a_kind.py): define your own kinds in Python, including one made of other claims
+- [kinds_from_yaml.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/kinds_from_yaml.py): build kinds from a YAML template with no code
+- [read_a_foreign_claim.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/read_a_foreign_claim.py): read a claim of a kind you have never seen
+- [check_model_output.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/check_model_output.py): give a model a schema, check what it returns, and send back what is missing
+
+## Optional
+
+- [Agent skill](https://raw.githubusercontent.com/griggz/lekton/main/skills/lekton/SKILL.md): guidance for an agent recording claims on a person's behalf
+- [AGENTS.md](https://raw.githubusercontent.com/griggz/lekton/main/AGENTS.md): how to work on the lekton repository itself

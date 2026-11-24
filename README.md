@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img src="assets/logo-light.svg" alt="lekton: what can be said" width="400">
+  </picture>
+</p>
+
 # lekton
 
 Claim kinds built from one primitive.
@@ -12,11 +19,35 @@ A thought is the primitive. Every other kind of claim is a thought plus somethin
 
 The name is Stoic. A *lekton* is "what can be said": the content of an utterance, apart from its words. The Stoics sorted lekta into kinds (assertions, questions, commands) about 2,300 years ago.
 
+The mark is a lambda, the first letter of λεκτόν, drawn as two strokes: a thought, and what you add to it.
+
 Status: v0. Not on PyPI yet.
+
+## Background
+
+`lekton` makes the nodes of a knowledge graph easier to define, generate, and curate. It treats claims as separate from things. A person, a company, or a tool is a thing. What someone decided or believed about it is a claim. Every claim is about at least one thing, and every claim has an author and a time.
+
+Things already have standards. schema.org and Wikidata describe people, organizations, and places, and individual fields keep their own ontologies, such as the Open Energy Ontology for energy systems. Those standards exist because the world mostly agrees on what a person or a power plant is.
+
+I have not found an open standard for how to structure a claim. Nanopublications, Wikidata's statement model, and PROV-O cover who said something and when. Nothing covers the kinds. Claims are more complex than things, and one person structures a claim differently than the next.
+
+So `lekton` builds claims in layers of abstraction. A thought is the most basic claim. The first layer above it holds kinds that add something to a thought, such as a question or a decision. Layers above that combine kinds from the first, so one claim can be made of others.
+
+The open work is defining that first layer: which kinds belong in it, and what each one adds. The library ships a question and a decision as the start.
+
+Everything past the first layer should become standard by adoption, not decree. Nobody decreed schema.org. Usage made it the standard.
+
+The longer argument is in [From Knowledge to Context](https://griggz.com/writing/from-knowledge-to-context).
 
 ## What this library is for
 
-It gives you building blocks. It does not police how you use them.
+It gives you the building blocks to programmatically define the kinds of claims you make.
+
+- **Compose.** A person or an agent can build a kind from a few parts, then build larger kinds out of those, until they have an ontology of claims.
+- **Deconstruct.** Any kind can be taken apart into its parent, the fields it adds, the claims it is made of, and the edges it owes. That includes someone else's, so you can see what makes their ontology theirs.
+- **Test.** A kind is structure, so a claim can be checked against it in code. You can write tests against your claims.
+
+It does not police how you use them.
 
 | | What the library does | Example |
 |---|---|---|
@@ -170,6 +201,19 @@ Types: `text`, `integer`, `number`, `boolean`, `date`, `datetime`, a list `[text
 - Versioning beyond the pin on an edge.
 - Namespaces for kinds, and versions of a kind's own definition.
 - Reference types (`person`, `thing`, `source`). They are plain text for now.
+
+## For agents
+
+lekton is meant to be picked up by an agent working for a person, as much as by the person.
+
+| If you are | Start here |
+|---|---|
+| An agent that needs the docs | [`llms.txt`](llms.txt), an index of every page as Markdown |
+| An agent recording claims for someone | [`skills/lekton/SKILL.md`](skills/lekton/SKILL.md) |
+| Wiring lekton into tool calls or structured output | [Using lekton from an agent](docs/agents.md) |
+| Working on this repository | [`AGENTS.md`](AGENTS.md) |
+
+More in [`docs/`](docs/), and runnable scripts in [`examples/`](examples/).
 
 ## Development
 
