@@ -30,7 +30,7 @@ Run the tests before you call anything done. They also run every script in `exam
 
 ## What the library is for
 
-It fixes the shape of a claim and reports what is missing. It does not police how carefully anyone uses it.
+A claim is content someone put into words that is about things and can be taken up: disputed, answered, or followed. A thing has an identity and is pointed at; claims are about things. The library fixes the shape of a claim and reports what is missing. It does not police how carefully anyone uses it.
 
 | | What the library does |
 |---|---|
@@ -45,7 +45,8 @@ Hold to this when you add anything. Do not add a strict mode, a quality score, o
 - **`check` is the authority.** A class name or a `kind` key is a label. Decide what a claim is by its structure.
 - **A kind adds; it never redefines.** The library raises on a subclass that changes an inherited field. Keep it that way.
 - **`Thought`, `Question`, and `Decision` are the opinionated core.** Do not change their fields without the maintainer's say.
-- **Required edges are owed, not gates.** A missing edge belongs in `Report.owed`.
+- **Required edges are owed, not gates.** A missing edge belongs in `Report.owed`. A missing part belongs in `Report.missing`.
+- **A field is about the claim; a claim about the world is a part.** If someone could disagree with it on its own, it is a thought in a role, not a string field. `Decision` adds no fields for this reason.
 - **Defaults must not overclaim.** `modality` defaults to `unstated` for this reason.
 - **Docs and examples must be true.** If you change behavior, update `docs/reference.md`, the README, and any example it touches. Add an example to `llms.txt` when you add one.
 - **This is a public repository.** Do not add names of private projects, customers, or people.

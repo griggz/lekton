@@ -15,8 +15,10 @@ class Risk(Thought):
 
 
 class Bet(Thought):
+    """A bet backs a decision and is exposed to a risk."""
+
     thesis: str
-    parts = composed_of(Decision, Risk)
+    parts = composed_of(backs=Decision, exposed_to=Risk)
 
 
 class Position(Thought):
@@ -56,14 +58,37 @@ def question() -> Question:
 
 
 @pytest.fixture
-def decision() -> Decision:
-    return Decision(
+def alternative() -> Thought:
+    """The option passed over. A claim of its own, as it was raised."""
+    return Thought(
         record=Record(author="wayne"),
-        body="Retire the traverse tool in the Postgres port.",
+        body="A read-only SQL tool with the same gating could replace it.",
         about=["traverse tool", "Postgres port"],
-        chosen="Retire it, with no replacement",
-        alternatives=["A read-only SQL tool with the same gating"],
-        rationale="Unused, already off on shared instances, and it cannot be ported as is.",
+    )
+
+
+@pytest.fixture
+def rationale() -> Thought:
+    """The reason. Also a claim of its own, so it can be contradicted later."""
+    return Thought(
+        record=Record(author="wayne"),
+        body="Unused, already off on shared instances, and it cannot be ported as is.",
+        about=["traverse tool"],
+    )
+
+
+@pytest.fixture
+def decision(alternative, rationale) -> Decision:
+    """The commitment, pointing at what it passed over and why. It does not
+    yet point at its question."""
+    return (
+        Decision(
+            record=Record(author="wayne"),
+            body="Retire the traverse tool in the Postgres port.",
+            about=["traverse tool", "Postgres port"],
+        )
+        .with_link("passed_over", alternative)
+        .with_link("because", rationale)
     )
 
 

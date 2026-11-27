@@ -3,17 +3,14 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from lekton import Assertion, Decision, check, promote
+from lekton import Assertion, Decision, Question, check, promote
 
 
-def test_promotion_makes_a_new_claim_that_points_back(thought):
+def test_promotion_makes_a_new_claim_that_points_back(thought, alternative, rationale):
     decision = promote(
         thought,
         Decision,
         body="Retire the traverse tool in the Postgres port.",
-        chosen="Retire it, with no replacement",
-        alternatives=["A read-only SQL tool with the same gating"],
-        rationale="Unused, and already off on shared instances.",
         assertion=Assertion(predicate="is retired", modality="asserted"),
     )
     assert type(decision) is Decision
@@ -29,22 +26,23 @@ def test_promotion_makes_a_new_claim_that_points_back(thought):
     assert thought.links == []
 
 
-def test_a_promoted_decision_still_owes_its_question(thought):
-    decision = promote(
-        thought,
-        Decision,
-        chosen="Retire it",
-        alternatives=["Port it"],
-        rationale="Unused.",
-    )
-    assert check(decision).owed == ("resolves: question",)
+def test_a_promoted_decision_is_not_one_until_it_points_at_what_it_passed_over(
+    thought, alternative, rationale
+):
+    promoted = promote(thought, Decision, body="Retire the traverse tool.")
+    assert check(promoted).missing == ("passed_over: thought",)
+
+    decision = promoted.with_link("passed_over", alternative).with_link("because", rationale)
+    report = check(decision, known=[alternative, rationale])
+    assert report.fits
+    assert report.owed == ("resolves: question",)
 
 
 def test_promotion_fails_without_what_the_kind_adds(thought):
     with pytest.raises(ValidationError):
-        promote(thought, Decision, chosen="Retire it")
+        promote(thought, Question)
 
 
 def test_promotion_only_goes_down_the_family_tree(question):
     with pytest.raises(TypeError, match="does not specialize question"):
-        promote(question, Decision, chosen="x", alternatives=["y"], rationale="z")
+        promote(question, Decision)

@@ -1,0 +1,19 @@
+# The kinds that ship with the library, in the template format. This file
+# says the same thing as kinds.py; the test suite holds the two together.
+#
+# The thought is not declared here. It is built in, and every template
+# starts from it. A decision resolves a question, so question comes first:
+# a template declares a kind after the kinds it depends on.
+
+question:
+  specializes: thought
+  adds:
+    settled_by: text
+    owner: text?
+decision:
+  specializes: thought
+  parts:
+    passed_over: thought
+  requires:
+    because: thought
+    resolves: question

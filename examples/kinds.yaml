@@ -19,9 +19,9 @@ experiment:
 
 bet:
   specializes: thought
-  composed_of:
-    min: 2
-    parts: [decision, risk]
   adds:
     thesis: text
     tags?: [text]
+  parts:
+    backs: decision
+    exposed_to: risk

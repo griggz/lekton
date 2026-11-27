@@ -129,34 +129,37 @@ def check(
                 )
         return found, lost
 
-    # Parts. A composite without its parts is not that composite.
-    composition = kind.composition()
-    if composition is not None:
-        found, lost = targets("composed_of")
-        if len(found) + lost < composition.min:
-            lacks("composed_of", f"needs {composition.min} parts, has {len(found) + lost}")
-        for part in composition.parts:
-            if any(check(t, part, known=index).fits for t in found):
-                continue
-            if lost:
-                unverified.append(f"composed_of: {part.kind_name()}")
-            else:
-                lacks(f"composed_of: {part.kind_name()}", "no part of this kind")
-        if composition.allows is not None:
-            for target in found:
-                if not any(check(target, ok, known=index).fits for ok in composition.allows):
-                    lacks(f"composed_of: {target.id}", f"a {target.kind} is not an allowed part")
+    def filled(verb: str, wanted: type[Thought], least: int = 1) -> tuple[bool | None, int]:
+        """Are there `least` edges with this verb to claims that fit?
+
+        None when it cannot be told: too few were found, but enough could
+        not be looked up to make the difference. Also returns how many fit.
+        """
+        found, lost = targets(verb)
+        fitting = sum(1 for t in found if check(t, wanted, known=index).fits)
+        if fitting >= least:
+            return True, fitting
+        return (None if fitting + lost >= least else False), fitting
+
+    # Parts. A composite missing a role is not that composite. Parts and
+    # required edges are the same check; they differ in what a gap means.
+    for verb, role in kind.composition().items():
+        label = f"{verb}: {role.kind.kind_name()}"
+        state, fitting = filled(verb, role.kind, role.min)
+        if state is None:
+            unverified.append(label)
+        elif not state:
+            why = "no part of this kind" if role.min == 1 else f"needs {role.min}, has {fitting}"
+            lacks(label, why)
 
     # Required edges. Owed, not disqualifying.
     owed: list[str] = []
     for verb, wanted in kind.requirements().items():
         label = f"{verb}: {wanted.kind_name()}"
-        found, lost = targets(verb)
-        if any(check(t, wanted, known=index).fits for t in found):
-            continue
-        if lost:
+        state, _ = filled(verb, wanted)
+        if state is None:
             unverified.append(label)
-        else:
+        elif not state:
             owed.append(label)
 
     return Report(

@@ -23,12 +23,13 @@ def promote(
 ) -> K:
     """Make a new claim of a more specific kind from an existing one.
 
-    Pass the fields the kind adds as keyword arguments. Anything the
-    thought already carries comes along; pass it again to override (a new
-    `assertion`, for instance, when a hypothesis has become settled).
+    Pass the fields the kind adds, if any, as keyword arguments. Anything
+    the thought already carries comes along; pass it again to override (a
+    new `body`, say, when the thought was a hunch and the decision is the
+    commitment). Parts are edges, so add them afterwards with `with_link`.
 
-    Raises if the added fields do not satisfy the kind. Required edges are
-    not checked here: run `check` on the result to see what it still owes.
+    Raises if the added fields do not satisfy the kind. Parts and required
+    edges are not checked here: run `check` on the result.
     """
     if not issubclass(kind, type(thought)) or kind is type(thought):
         raise TypeError(
