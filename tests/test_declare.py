@@ -217,8 +217,10 @@ def test_a_part_spelled_wrong_is_refused():
 
 
 def test_a_part_must_name_a_kind_that_exists():
+    # A fresh name: kinds register per process, and one declared by an
+    # earlier test may still be alive, which would trip the same-name check first.
     with pytest.raises(ValueError, match="backs points at 'hunch'"):
-        load_kind({"wager": {"specializes": "thought", "parts": {"backs": "hunch"}}})
+        load_kind({"punt": {"specializes": "thought", "parts": {"backs": "hunch"}}})
 
 
 def test_a_verb_yaml_read_as_a_boolean_is_refused_with_a_reason():
