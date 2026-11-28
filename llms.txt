@@ -1,6 +1,6 @@
 # lekton
 
-> lekton is a Python library for defining kinds of claims from one primitive, the thought. A claim is something a person decided, noticed, argued, or believed. Every kind is a thought plus something: fields it adds, other claims it is made of, or an edge it owes. A claim's kind is decided by its structure, not by its label.
+> lekton is a Python library for defining kinds of claims from one primitive, the thought. A claim is content someone put into words that is about things and can be taken up: agreed with or disputed, answered, followed or refused. Things, which claims are about, have an identity and are pointed at. Every kind is a thought plus something: fields it adds, other claims it is made of (each in a named role), or an edge it owes. A decision adds no fields: its alternatives and its reason are claims of their own, linked by role. A claim's kind is decided by its structure, not by its label.
 
 Install with `pip install lekton`. It needs Python 3.10 or later. Import everything from the top level: `from lekton import Thought, Question, Decision, check, promote, load_kinds`.
 
@@ -16,6 +16,7 @@ Install with `pip install lekton`. It needs Python 3.10 or later. Import everyth
 - [thought_to_decision.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/thought_to_decision.py): record a thought, promote it to a decision, and resolve a question
 - [define_a_kind.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/define_a_kind.py): define your own kinds in Python, including one made of other claims
 - [kinds_from_yaml.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/kinds_from_yaml.py): build kinds from a YAML template with no code
+- [kinds_for_a_mind.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/kinds_for_a_mind.py): one person's own kinds (insight, regularity, practice, event, position, answer) from a template that declares only what it adds
 - [read_a_foreign_claim.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/read_a_foreign_claim.py): read a claim of a kind you have never seen
 - [check_model_output.py](https://raw.githubusercontent.com/griggz/lekton/main/examples/check_model_output.py): give a model a schema, check what it returns, and send back what is missing
 

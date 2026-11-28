@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from .relations import Composition, Requirement
+from .relations import Composition, Requirement, Role
 
 
 def _now() -> datetime:
@@ -78,10 +78,30 @@ class Ref(BaseModel):
 
 
 class Link(BaseModel):
-    """An edge from this claim to another: resolves, composed_of, evolved_from, supersedes."""
+    """An edge from this claim to another.
+
+    The verb is the kind's own word for the edge: a role it declares in
+    `composed_of` (`passed_over`), an edge it owes in `requires`
+    (`because`, `resolves`), or one of the two every claim may carry,
+    `evolved_from` and `supersedes`.
+
+    An edge is an assertion too: someone said these two claims relate.
+    `basis` says how that is known, as it does on an assertion: the
+    speaker's own words carried it (stated), or whoever recorded the claim
+    read it in (inferred). It defaults to none, so an edge nobody examined
+    never passes as one the speaker drew. `by` names who drew it when that
+    is not the claim's author, such as an extractor.
+
+    How much to trust an edge is a graph's own business. A graph that
+    scores its edges keeps the score here as an extra field.
+    """
+
+    model_config = ConfigDict(extra="allow")
 
     verb: str
     to: Ref
+    basis: Literal["stated", "inferred"] | None = None
+    by: str | None = None
 
 
 class Thought(BaseModel):
@@ -162,13 +182,18 @@ class Thought(BaseModel):
         return {name: f for name, f in cls.model_fields.items() if name not in inherited}
 
     @classmethod
-    def composition(cls) -> Composition | None:
-        """What this kind is made of, if it is a composite. The nearest declaration wins."""
-        for klass in cls.__mro__:
+    def composition(cls) -> dict[str, Role]:
+        """The parts this kind is made of, verb to role. Inherited: a subclass never drops one.
+
+        A role is the kind that fills it and the fewest it takes. Empty for
+        a kind that is not a composite.
+        """
+        found: dict[str, Role] = {}
+        for klass in reversed(cls.__mro__):
             for value in vars(klass).values():
                 if isinstance(value, Composition):
-                    return value
-        return None
+                    found.update(value.roles)
+        return found
 
     @classmethod
     def requirements(cls) -> dict[str, type[Thought]]:
@@ -181,12 +206,28 @@ class Thought(BaseModel):
         return found
 
     @classmethod
+    def depends_on(cls) -> list[type[Thought]]:
+        """The kinds this one cannot be declared without: its parent, the kinds
+        that fill its roles, and the kinds its owed edges point at.
+
+        A decision depends on the question it resolves. An ontology that
+        includes one must include the other, or the dependency is an error
+        when the template is loaded.
+        """
+        found: list[type[Thought]] = []
+        parts = [role.kind for role in cls.composition().values()]
+        for kind in [cls.parent(), *parts, *cls.requirements().values()]:
+            if kind is not None and kind is not cls and kind not in found:
+                found.append(kind)
+        return found
+
+    @classmethod
     def is_distinct(cls) -> bool:
         """Can this kind be told from its parent by structure alone?
 
-        It can if it adds a required field or is made of parts. A kind that
-        adds only optional fields has the same shape as its parent, so no
-        structural check can pick it out.
+        It can if it adds a required field or declares a role of its own.
+        A kind that adds only optional fields has the same shape as its
+        parent, so no structural check can pick it out.
         """
         if cls.parent() is None:
             return True
@@ -204,10 +245,21 @@ class Thought(BaseModel):
         """A pointer to this claim at its current version."""
         return Ref(id=self.id, version=self.record.version)
 
-    def with_link(self, verb: str, to: Thought | Ref) -> Thought:
-        """A copy of this claim with one more edge. The original is left alone."""
+    def with_link(
+        self,
+        verb: str,
+        to: Thought | Ref,
+        *,
+        basis: Literal["stated", "inferred"] | None = None,
+        by: str | None = None,
+    ) -> Thought:
+        """A copy of this claim with one more edge. The original is left alone.
+
+        `basis` and `by` say how the edge is known and who drew it; see `Link`.
+        """
         target = to.ref() if isinstance(to, Thought) else to
-        return self.model_copy(update={"links": [*self.links, Link(verb=verb, to=target)]})
+        link = Link(verb=verb, to=target, basis=basis, by=by)
+        return self.model_copy(update={"links": [*self.links, link]})
 
     def linked(self, verb: str) -> list[Ref]:
         """The targets of this claim's edges with the given verb."""

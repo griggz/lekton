@@ -61,7 +61,7 @@ def test_kind_names_come_from_the_class():
     assert Decision.kind_name() == "decision"
     assert Thought.parent() is None
     assert Decision.parent() is Thought
-    assert set(Decision.adds()) == {"chosen", "alternatives", "rationale"}
+    assert set(Question.adds()) == {"settled_by", "owner"}
 
 
 def test_every_defined_kind_is_findable_by_name():
@@ -84,7 +84,27 @@ def test_a_kind_with_no_required_addition_is_not_distinct():
     assert not Position.is_distinct()
 
 
+def test_an_edge_says_how_it_is_known_and_who_drew_it(decision, question):
+    # The default claims nothing, as modality does on an assertion.
+    assert decision.links[0].basis is None
+    assert decision.links[0].by is None
+
+    stated = decision.with_link("resolves", question, basis="stated")
+    inferred = decision.with_link("resolves", question, basis="inferred", by="extractor v3")
+    assert stated.links[-1].basis == "stated" and stated.links[-1].by is None
+    assert inferred.links[-1].by == "extractor v3"
+
+    # A graph's own score on an edge rides along; the library keeps no scale of its own.
+    raw = {**inferred.links[-1].model_dump(), "score": 0.6}
+    from lekton import Link
+
+    assert Link.model_validate(raw).model_dump()["score"] == 0.6
+    assert "score" not in Link.model_fields
+
+
 def test_linking_returns_a_copy(decision, question):
+    before = list(decision.links)
     linked = decision.with_link("resolves", question)
-    assert decision.links == []
+    assert decision.links == before
     assert linked.linked("resolves") == [question.ref()]
+    assert len(linked.links) == len(before) + 1

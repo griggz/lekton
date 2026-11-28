@@ -1,0 +1,50 @@
+# The kinds one person uses for their own thinking, on top of what the
+# library ships. Thought, question, and decision are not declared here:
+# import them. A template declares only what it adds.
+#
+# Each kind went through one test. A field is about the claim itself: when
+# it applies, what would settle it, what would prove it wrong. Anything
+# someone could disagree with on its own is a claim, and takes a role.
+#
+# Fields the person's graph puts on every claim (confidence, conviction,
+# energy, valence) are not declared per kind. They ride along on any claim;
+# the library keeps fields it does not know.
+
+insight:
+  specializes: thought
+  parts:
+    implies: thought          # what follows from it: the part that makes it more than a thought
+
+# "Pattern" was one kind and meant two things. Split by what each calls for:
+# a regularity is asserted and can be disputed; a practice is an instruction.
+
+regularity:
+  specializes: thought
+  parts:
+    seen_in: {kind: thought, min: 2}   # recurring means seen in at least two claims
+
+practice:
+  specializes: thought
+  adds:
+    applies_when: text        # the author's own scope for the instruction, like a question's settled_by
+  requires:
+    grounded_in: regularity   # the recurrence it rests on; a practice nobody has seen work owes one
+
+event:
+  specializes: thought
+  adds:
+    occurred_at: datetime     # when it happened. The envelope's valid_at says the same; a required one would be a restriction, which the format cannot write yet
+  requires:
+    resulted_in: thought      # the outcome, once there is one
+
+position:
+  specializes: thought
+  adds:
+    falsifier: text           # what would prove it wrong: the author's own closure condition, as settled_by is for a question
+
+answer:
+  specializes: thought
+  adds:
+    status: draft|approved|retired
+  parts:
+    resolves: question        # an answer is made by the question it answers; a decision only owes one
